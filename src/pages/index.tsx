@@ -23,9 +23,14 @@ export default function Home(){
 
   if(firstPokemon.isLoading || secondPokemon.isLoading) return null;
 
+  const voteForRoundest = (selected: number) => {
+    // todo: fire mutation to persist changes
+    setIds(getOptionsForVote());
+  }
+
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center relative">
-      <div className="text-2xl text-center">Which Pokemon is rounder?</div>
+      <div className="text-2xl text-center">Which Pokémon is more round?</div>
       <div className="p-2"/>
       <div className="border rounded p-8 flex justify-between max-w-2xl items-center">
         <div className="w-32 h-32 bg-pink-300">

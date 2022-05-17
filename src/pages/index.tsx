@@ -34,34 +34,37 @@ export default function Home(){
       <div className="text-2xl text-center">Which Pokémon is more round?</div>
       <div className="p-2"/>
       <div className="border rounded p-8 flex justify-between max-w-2xl items-center">
-        <div className="w-32 h-32 bg-pink-300 flex flex-col items-center">
-          <img 
-            alt="sprite" 
-            className="w-full" 
-            src={firstPokemon.data?.sprites.front_default}
-          />
-          <div className="text-l text-center capitalize pt-1">
-            {firstPokemon.data?.name}
-          </div>
-          <button className={btn} onClick={() => voteForRoundest()}>
-            Rounder
-          </button>
-        </div>  
-        <div className="p-8">Vs</div>  
-        <div className="w-32 h-32 bg-blue-300 flex flex-col items-center">
-          <img 
-            alt="sprite" 
-            className="w-full"
-            src={secondPokemon.data?.sprites.front_default}
-          />
-          <div className="text-l text-center capitalize pt-1">
-            {secondPokemon.data?.name}
-          </div>
-          <button className={btn} onClick={() => voteForRoundest()}>
-            Rounder
-          </button>
-        </div>  
+        { !firstPokemon.isLoading && 
+          !secondPokemon.isLoading &&
+          firstPokemon.data &&
+          secondPokemon.data && (
+            <>
+              <PokemonListing pokemon={firstPokemon.data} vote={() => voteForRoundest()}/>
+              <div className="p-8">Vs</div>  
+              <PokemonListing pokemon={secondPokemon.data} vote={() => voteForRoundest()}/>  
+            </>
+        )}
       </div>
     </div>
   );
+}
+
+type PokemonFromServer = inferQueryResponse<"get-pokemon-from-id">;
+
+const PokemonListing: React.FC<{pokemon: PokemonFromServer, vote: () => void}> = (props) => {
+  return (
+    <div>
+      <img 
+          alt="sprite" 
+          className="w-full" 
+          src={props.pokemon.sprites.front_default}
+      />
+      <div className="text-l text-center capitalize pt-1">
+        {props.pokemon.name}
+      </div>
+      <button className={btn} onClick={() => props.vote()}>
+        Rounder
+      </button>
+    </div>
+  )
 }

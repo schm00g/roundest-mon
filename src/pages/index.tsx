@@ -25,8 +25,15 @@ export default function Home(){
   
   if(firstPokemon.isLoading || secondPokemon.isLoading) return null;
 
+  const voteMutation = trpc.useMutation(["cast-vote"])
+
   const voteForRoundest = (selected: number) => {
-    // todo: fire mutation to persist changes
+    if(selected === first){
+      voteMutation.mutate({votedFor: first, votedAgainst: second});
+    } else {
+      voteMutation.mutate({votedFor: second, votedAgainst: first});
+    }
+
     setIds(getOptionsForVote());
   }
 
@@ -39,9 +46,9 @@ export default function Home(){
           firstPokemon.data &&
           secondPokemon.data && (
             <div className="p-8 flex justify-between items-center max-w-2xl flex-col md:flex-row animate-fade-in">
-              <PokemonListing pokemon={firstPokemon.data} vote={() => voteForRoundest()}/>
+              <PokemonListing pokemon={firstPokemon.data} vote={() => voteForRoundest("first")}/>
               <div className="p-8">Vs</div>  
-              <PokemonListing pokemon={secondPokemon.data} vote={() => voteForRoundest()}/>  
+              <PokemonListing pokemon={secondPokemon.data} vote={() => voteForRoundest("second")}/>  
               <div className="p-2"/>
             </div>
         )}
